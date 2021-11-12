@@ -14,32 +14,43 @@
 </style>
 
 <script>
+    function urlBase64ToUint8Array(base64String) {
+    var padding = '='.repeat((4 - base64String.length % 4) % 4);
+    var base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
 
-window.addEventListener("load", async () => {
-    const subscribeButton = document.querySelector("#subscribeButton");
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
 
-    // Register Service Worker
-    const sW = await navigator.serviceWorker.register("./public/sw.js");
-    console.log("Service Worker => ", sW);
+    for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
 
-    console.log(subscribeButton)
-    subscribeButton.addEventListener("click", async () => {
-        console.log("click")
-        const serviceWorker = await navigator.serviceWorker.ready;
-        const clientID = await serviceWorker.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey:
-            "BKzZVuQH6nXRCJ5tx_-PQ9UUAKyg-WUyc-Xzl1Rsj4HqT_7IK0TjAkRGLao6rKGsbC2oe67GLlgKliuc0Bkaw0c",
-        });
+function subscribeUserToPush() {
+  return navigator.serviceWorker.register('/public/sw.js')
+  .then(function(registration) {
+    const subscribeOptions = {
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(
+        'BKzZVuQH6nXRCJ5tx_-PQ9UUAKyg-WUyc-Xzl1Rsj4HqT_7IK0TjAkRGLao6rKGsbC2oe67GLlgKliuc0Bkaw0c'
+      )
+    };
 
-        console.log(clientID);
-        console.log(JSON.stringify(clientID));
-    });
-});
+    return registration.pushManager.subscribe(subscribeOptions);
+  })
+  .then(function(pushSubscription) {
+    console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
+    return pushSubscription;
+  });
+}
+
 </script>
 
 <div class="header">
     <p>Notification Test</p>
-    <button id="subscribeButton" >Subscribe</button>
+    <button onclick="subscribeUserToPush()" >Subscribe</button>
     
 </div>
