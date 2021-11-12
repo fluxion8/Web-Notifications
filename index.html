@@ -19,7 +19,7 @@ window.addEventListener("load", async () => {
     const subscribeButton = document.querySelector("#subscribeButton");
 
     // Register Service Worker
-    const sW = await navigator.serviceWorker.register("./static/sw.js");
+    const sW = await navigator.serviceWorker.register("./sw.js");
     console.log("Service Worker => ", sW);
 
     console.log(subscribeButton)
