@@ -11,6 +11,11 @@
         color:white
     }
 
+    .main div{
+        text-align: center;
+        padding: 15px;
+    }
+
 </style>
 
 <script>
@@ -59,7 +64,7 @@ function sendNotification(){
 }
 
 async function saveSubInfo(){
-    console.log(JSON.stringify(subInfo))
+
     let response = await fetch('/saveSubInfo',{
         method: 'POST',
         body: JSON.stringify(subInfo),
@@ -77,6 +82,9 @@ async function saveSubInfo(){
   
     
 </div>
+<div class="main">
+    <div > <button onclick="subscribeUserToPush()">Subscribe</button></div>
+   
+    <div> <button onclick="sendNotification()" >Send Notification</button></div>
+</div>
 
-<button onclick="subscribeUserToPush()" >Subscribe</button>
-<button onclick="sendNotification()" >Send Notification</button>
