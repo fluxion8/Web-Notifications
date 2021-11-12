@@ -29,6 +29,8 @@
     return outputArray;
 }
 
+let subInfo
+
 function subscribeUserToPush() {
   return navigator.serviceWorker.register('/public/sw.js')
   .then(function(registration) {
@@ -42,15 +44,39 @@ function subscribeUserToPush() {
     return registration.pushManager.subscribe(subscribeOptions);
   })
   .then(function(pushSubscription) {
+    subInfo = pushSubscription
     console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
+    saveSubInfo()
     return pushSubscription;
   });
+}
+
+function sendNotification(){
+    fetch('sendNotification',{
+        method: 'POST',
+        body: JSON.stringify(subInfo)
+    })
+}
+
+async function saveSubInfo(){
+    console.log(JSON.stringify(subInfo))
+    let response = await fetch('saveSubInfo',{
+        method: 'POST',
+        body: JSON.stringify(subInfo),
+        headers: { "Content-Type": "application/json" }
+    })
+
+    console.log(response.text())
+
 }
 
 </script>
 
 <div class="header">
     <p>Notification Test</p>
-    <button onclick="subscribeUserToPush()" >Subscribe</button>
+  
     
 </div>
+
+<button onclick="subscribeUserToPush()" >Subscribe</button>
+<button onclick="sendNotification()" >Send Notification</button>
