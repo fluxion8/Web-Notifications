@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+
+<style>
+
+
+    .header{
+        background-color: #0a539e;
+        text-align: center;
+    }
+    .header p{
+        color:white
+    }
+
+</style>
+
+<script>
+
+window.addEventListener("load", async () => {
+    const subscribeButton = document.querySelector("#subscribeButton");
+
+    // Register Service Worker
+    const sW = await navigator.serviceWorker.register("./static/sw.js");
+    console.log("Service Worker => ", sW);
+
+    console.log(subscribeButton)
+    subscribeButton.addEventListener("click", async () => {
+        console.log("click")
+        const serviceWorker = await navigator.serviceWorker.ready;
+        const clientID = await serviceWorker.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey:
+            "BKzZVuQH6nXRCJ5tx_-PQ9UUAKyg-WUyc-Xzl1Rsj4HqT_7IK0TjAkRGLao6rKGsbC2oe67GLlgKliuc0Bkaw0c",
+        });
+
+        console.log(clientID);
+        console.log(JSON.stringify(clientID));
+    });
+});
+</script>
+
+<div class="header">
+    <p>Notification Test</p>
+    <button id="subscribeButton" >Subscribe</button>
+    
+</div>
