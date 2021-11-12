@@ -52,7 +52,7 @@ function subscribeUserToPush() {
 }
 
 function sendNotification(){
-    fetch('sendNotification',{
+    fetch('/sendNotification',{
         method: 'POST',
         body: JSON.stringify(subInfo)
     })
@@ -60,7 +60,7 @@ function sendNotification(){
 
 async function saveSubInfo(){
     console.log(JSON.stringify(subInfo))
-    let response = await fetch('saveSubInfo',{
+    let response = await fetch('/saveSubInfo',{
         method: 'POST',
         body: JSON.stringify(subInfo),
         headers: { "Content-Type": "application/json" }
